@@ -2,15 +2,6 @@
 
 A user-friendly, no-code web interface for InfluxDB that simplifies querying and trending data without programming expertise.
 
-## Features
-
-✅ **Secure Authentication** - Connect to InfluxDB with URL, organization, and API token
-✅ **Modern UI** - Built with React and Material-UI for professional appearance
-✅ **Protected Routes** - Automatic login/logout flow with session persistence
-🚧 **Visual Query Builder** - Drag-and-drop interface for building queries (Coming Soon)
-🚧 **Data Visualization** - Interactive charts and trends (Coming Soon)
-🚧 **Custom Data Organization** - Hierarchical data structure beyond buckets (Coming Soon)
-🚧 **Grafana Integration** - Save and edit visualizations in Grafana (Coming Soon)
 
 ## Quick Start
 
@@ -81,21 +72,8 @@ npm run build
 # Download InfluxDB 2.7 from https://portal.influxdata.com/downloads/
 # Or use Docker:
 docker run -p 8086:8086 influxdb:2.7
-```
 
-## Project Structure
 
-```
-src/
-├── components/
-│   ├── LoginForm.jsx          # Main login interface
-│   ├── Dashboard.jsx          # Post-login dashboard
-│   └── ProtectedRoute.jsx     # Route protection component
-├── contexts/
-│   └── AuthContext.jsx        # Authentication state management
-├── App.jsx                    # Main application component
-└── main.jsx                   # Application entry point
-```
 
 ## Authentication Flow
 
