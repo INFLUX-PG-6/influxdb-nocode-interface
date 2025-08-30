@@ -208,24 +208,6 @@ const LoginForm = () => {
                 )}
               </Button>
 
-              <Button
-                fullWidth
-                variant="outlined"
-                sx={{ mb: 2 }}
-                onClick={() => {
-                  // Demo mode - simulate successful login
-                  const demoAuth = {
-                    url: formData.url || 'http://localhost:8086',
-                    token: 'demo-token-for-testing',
-                    org: formData.org || 'demo-org'
-                  };
-                  localStorage.setItem('influxdb_auth', JSON.stringify(demoAuth));
-                  window.location.reload();
-                }}
-              >
-                Demo Mode (No InfluxDB Required)
-              </Button>
-
               <Box sx={{ mt: 2 }}>
                 <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 1 }}>
                   <strong>Need help?</strong>
