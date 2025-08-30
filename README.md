@@ -49,10 +49,30 @@ You can test the interface functionality without a running InfluxDB instance:
 
 ### Configuration
 
+#### For Development (Local InfluxDB)
 1. Start your InfluxDB instance (default: http://localhost:8086)
 2. Create an API token in InfluxDB with appropriate permissions
 3. Note your organization name
 4. Open the application and enter your credentials
+
+#### For Production Deployment
+1. Create a `.env` file in the project root:
+```bash
+# Copy from env.example
+cp env.example .env
+
+# Edit .env file with your production settings
+VITE_INFLUXDB_URL=https://your-influxdb-server.com:8086
+VITE_DEFAULT_ORG=your-production-org
+VITE_ENV=production
+```
+
+2. Build for production:
+```bash
+npm run build
+```
+
+3. Deploy the `dist/` folder to your web server
 
 ### Default InfluxDB Setup (for testing)
 
@@ -118,7 +138,14 @@ The login module is complete and ready for submission. Future development will i
 - Verify InfluxDB is running and accessible
 - Check API token permissions
 - Ensure organization name is correct
-- Verify CORS settings if running on different ports
+- **CORS Configuration**: If your InfluxDB server is on a different domain, configure CORS headers:
+  ```bash
+  # Add to InfluxDB configuration
+  [http]
+  bind-address = ":8086"
+  cors-enabled = true
+  cors-allow-origin = "https://your-frontend-domain.com"
+  ```
 
 **Authentication Errors:**
 - Confirm API token is not expired

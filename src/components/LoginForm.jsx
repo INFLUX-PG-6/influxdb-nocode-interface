@@ -23,9 +23,9 @@ import { useAuth } from '../hooks/useAuth';
 const LoginForm = () => {
   const { login, loading } = useAuth();
   const [formData, setFormData] = useState({
-    url: 'http://localhost:8086',
+    url: import.meta.env.VITE_INFLUXDB_URL || 'http://localhost:8086',
     token: '',
-    org: ''
+    org: import.meta.env.VITE_DEFAULT_ORG || ''
   });
   const [showToken, setShowToken] = useState(false);
   const [error, setError] = useState('');
@@ -38,8 +38,8 @@ const LoginForm = () => {
     
     setFormData(prev => ({
       ...prev,
-      url: savedUrl || 'http://localhost:8086',
-      org: savedOrg || ''
+      url: savedUrl || import.meta.env.VITE_INFLUXDB_URL || 'http://localhost:8086',
+      org: savedOrg || import.meta.env.VITE_DEFAULT_ORG || ''
     }));
   }, []);
 
