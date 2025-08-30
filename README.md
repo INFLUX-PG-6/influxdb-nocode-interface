@@ -24,13 +24,28 @@ A user-friendly, no-code web interface for InfluxDB that simplifies querying and
 
 ```bash
 # Clone and setup
-git clone <your-repo-url>
+git clone https://github.com/INFLUX-PG-6/influxdb-nocode-interface.git
 cd influxdb-nocode-interface
 npm install
 
 # Start development server
 npm run dev
 ```
+
+### Testing Without InfluxDB
+
+You can test the interface functionality without a running InfluxDB instance:
+
+**Form Validation Tests:**
+1. **Empty fields**: Leave fields blank and submit to see validation
+2. **Invalid URL**: Enter `abc` as URL to test URL validation  
+3. **Short token**: Enter a token shorter than 10 characters
+4. **Valid format**: Use `http://localhost:8086`, any org name, and a 10+ character token to test connection logic
+
+**Expected Behavior:**
+- Form validation shows user-friendly error messages
+- Connection attempts will show appropriate error messages (normal without InfluxDB)
+- Interface is fully responsive and functional
 
 ### Configuration
 
