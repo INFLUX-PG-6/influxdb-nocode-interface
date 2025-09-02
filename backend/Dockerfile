@@ -7,14 +7,17 @@ WORKDIR /app
 # 复制package.json和package-lock.json
 COPY package*.json ./
 
-# 安装依赖
-RUN npm ci --only=production
+# 安装所有依赖（包括开发依赖，用于构建）
+RUN npm ci
 
 # 复制源代码
 COPY . .
 
 # 构建TypeScript
 RUN npm run build
+
+# 删除开发依赖以减小镜像大小
+RUN npm ci --omit=dev && npm cache clean --force
 
 # 创建logs目录
 RUN mkdir -p logs
