@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # 构建TypeScript
-RUN npm run build
+RUN npx tsc
 
 # 删除开发依赖以减小镜像大小
 RUN npm ci --omit=dev && npm cache clean --force
