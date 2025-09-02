@@ -16,8 +16,8 @@ COPY . .
 # 构建TypeScript
 RUN npx tsc
 
-# 删除开发依赖以减小镜像大小
-RUN npm ci --omit=dev && npm cache clean --force
+# 清理node_modules并只安装生产依赖
+RUN rm -rf node_modules && npm ci --omit=dev && npm cache clean --force
 
 # 创建logs目录
 RUN mkdir -p logs
