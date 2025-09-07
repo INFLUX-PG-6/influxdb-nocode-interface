@@ -4,7 +4,7 @@ import { ApiResponse } from '../types';
 import logger from '../utils/logger';
 
 /**
- * 获取所有buckets
+ * Get all buckets
  */
 export const getBuckets = async (req: Request, res: Response) => {
   try {
@@ -82,7 +82,7 @@ export const getMeasurements = async (req: Request, res: Response) => {
     const client = influxService.getClient(session.credentials);
     const queryApi = client.getQueryApi(session.credentials.org);
     
-    // Flux查询获取measurements
+    // Flux查询Get measurements
     const fluxQuery = `
       import "influxdata/influxdb/schema"
       
@@ -147,7 +147,7 @@ export const getFields = async (req: Request, res: Response) => {
     const client = influxService.getClient(session.credentials);
     const queryApi = client.getQueryApi(session.credentials.org);
     
-    // 获取字段和标签信息
+    // Get fields and tags信息
     const fluxQuery = `
       import "influxdata/influxdb/schema"
       

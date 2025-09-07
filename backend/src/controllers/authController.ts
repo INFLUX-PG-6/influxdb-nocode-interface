@@ -11,7 +11,7 @@ export const connect = async (req: Request, res: Response) => {
   try {
     const { url, token, org }: InfluxDBCredentials = req.body;
 
-    // 验证必需字段
+    // Validate required fields
     if (!url || !token || !org) {
       const response: AuthResponse = {
         success: false,
@@ -20,7 +20,7 @@ export const connect = async (req: Request, res: Response) => {
       return res.status(400).json(response);
     }
 
-    // 基础URL验证
+    // Basic URL validation
     try {
       new URL(url);
     } catch {
@@ -31,7 +31,7 @@ export const connect = async (req: Request, res: Response) => {
       return res.status(400).json(response);
     }
 
-    // Token长度验证
+    // Token length validation
     if (token.length < 10) {
       const response: AuthResponse = {
         success: false,
@@ -42,7 +42,7 @@ export const connect = async (req: Request, res: Response) => {
 
     const credentials: InfluxDBCredentials = { url, token, org };
 
-    // 测试InfluxDB连接
+    // Test InfluxDB connection
     const connectionResult = await influxService.testConnection(credentials);
     
     if (!connectionResult.success) {
@@ -53,7 +53,7 @@ export const connect = async (req: Request, res: Response) => {
       return res.status(401).json(response);
     }
 
-    // 创建会话
+    // Create session
     const sessionToken = sessionService.createSession(credentials);
 
     const response: AuthResponse = {
@@ -62,7 +62,7 @@ export const connect = async (req: Request, res: Response) => {
       user: {
         org,
         url,
-        permissions: ['read', 'write'] // 暂时硬编码，后续可以从InfluxDB获取实际权限
+        permissions: ['read', 'write'] // Temporarily hardcoded, can fetch actual permissions from InfluxDB later
       }
     };
 
@@ -82,7 +82,7 @@ export const connect = async (req: Request, res: Response) => {
 };
 
 /**
- * 检查会话状态
+ * Check session status
  */
 export const getStatus = (req: Request, res: Response) => {
   // authenticateSession中间件已经验证了会话

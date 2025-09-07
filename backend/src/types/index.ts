@@ -1,4 +1,4 @@
-// 认证相关类型定义
+// Authentication related type definitions
 export interface InfluxDBCredentials {
   url: string;
   token: string;

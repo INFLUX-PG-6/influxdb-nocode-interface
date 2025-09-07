@@ -4,7 +4,7 @@ import { ApiResponse } from '../types';
 import logger from '../utils/logger';
 
 /**
- * 执行Flux查询
+ * Execute Flux query
  */
 export const executeQuery = async (req: Request, res: Response) => {
   try {

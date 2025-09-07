@@ -7,7 +7,7 @@ const router = Router();
 // 所有数据源相关路由都需要认证
 router.use(authenticateSession);
 
-// 获取buckets列表
+// Get buckets列表
 router.get('/buckets', dataSourceController.getBuckets);
 
 // 获取指定bucket的measurements

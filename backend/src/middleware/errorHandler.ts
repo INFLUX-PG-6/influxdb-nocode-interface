@@ -3,7 +3,7 @@ import { ApiResponse } from '../types';
 import logger from '../utils/logger';
 
 /**
- * 全局错误处理中间件
+ * Global error handling middleware
  */
 export const errorHandler = (
   error: Error,
@@ -29,7 +29,7 @@ export const errorHandler = (
 };
 
 /**
- * 404处理中间件
+ * 404 handling middleware
  */
 export const notFoundHandler = (req: Request, res: Response) => {
   const response: ApiResponse = {

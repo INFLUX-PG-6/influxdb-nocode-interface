@@ -14,7 +14,7 @@ class SessionService {
   }
 
   /**
-   * 创建新会话
+   * Create new session
    */
   createSession(credentials: InfluxDBCredentials): string {
     const sessionId = uuidv4();
@@ -32,7 +32,7 @@ class SessionService {
   }
 
   /**
-   * 获取会话数据
+   * Get session数据
    */
   getSession(sessionId: string): SessionData | null {
     const session = this.sessions.get(sessionId);
@@ -54,7 +54,7 @@ class SessionService {
   }
 
   /**
-   * 删除会话
+   * Delete session
    */
   deleteSession(sessionId: string): boolean {
     const deleted = this.sessions.delete(sessionId);
@@ -74,7 +74,7 @@ class SessionService {
   }
 
   /**
-   * 清理过期会话
+   * Cleanup expired sessions
    */
   private cleanupExpiredSessions(): void {
     const now = new Date().getTime();

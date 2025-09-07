@@ -6,7 +6,7 @@ class InfluxService {
   private clients: Map<string, InfluxDB> = new Map();
 
   /**
-   * 创建或获取InfluxDB客户端
+   * Create or get InfluxDB client
    */
   getClient(credentials: InfluxDBCredentials): InfluxDB {
     const clientKey = `${credentials.url}_${credentials.org}`;
@@ -31,10 +31,10 @@ class InfluxService {
     try {
       const client = this.getClient(credentials);
       
-      // 使用查询API来测试连接，这是更可靠的方法
+      // 使用查询API来Test connection，这是更可靠的方法
       const queryApi = client.getQueryApi(credentials.org);
       
-      // 执行一个简单的查询来测试连接
+      // 执行一个简单的查询来Test connection
       const query = `buckets() |> limit(n:1)`;
       
       // 使用Promise包装查询结果

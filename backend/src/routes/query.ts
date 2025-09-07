@@ -10,7 +10,7 @@ router.use(authenticateSession);
 // 执行Flux查询
 router.post('/execute', queryController.executeQuery);
 
-// 验证查询语法
+// Validate query语法
 router.post('/validate', queryController.validateQuery);
 
 // 获取查询模板
