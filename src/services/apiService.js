@@ -1,8 +1,6 @@
 // API服务层 - 处理与后端API的通信
-// 在开发环境使用Vite代理，生产环境使用完整URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || (
-  import.meta.env.DEV ? '/api' : 'http://localhost:3001/api'
-);
+// 在开发环境使用Vite代理，生产环境使用Netlify重定向到Railway
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 class ApiService {
   constructor() {
