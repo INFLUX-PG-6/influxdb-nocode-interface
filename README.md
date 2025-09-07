@@ -2,9 +2,15 @@
 
 A user-friendly, no-code web interface for InfluxDB that simplifies querying and trending data without programming expertise.
 
-## Current Status: Phase 1 - Authentication Module ✅
+## ✅ Current Status: Core Features Complete
 
-This project is currently in development. **Phase 1 (Login/Authentication)** has been completed and is ready for testing.
+**Live Demo**: https://influxdb-nocode-interface.netlify.app
+
+### Features Available:
+- ✅ **Authentication** - Connect to InfluxDB Cloud/OSS
+- ✅ **Data Explorer** - Browse buckets, measurements, and fields
+- ✅ **Query Execution** - Run Flux queries with results display
+- 🚧 **Data Visualization** - Coming next
 
 
 ## Quick Start
@@ -29,28 +35,24 @@ npm run dev
 
 Open `http://localhost:5173/` in your browser.
 
-### Testing the Login Interface
+### Using the Interface
 
-You can test all functionality without a running InfluxDB instance:
+**For InfluxDB Cloud:**
+1. Get your URL from InfluxDB Cloud (e.g., `https://us-east-1-1.aws.cloud2.influxdata.com`)
+2. Find your Organization ID in the URL path after login
+3. Create an "All Access" API token in InfluxDB Cloud
+4. Connect and start exploring your data!
 
-**Test Cases:**
-1. **Empty fields** - Click connect without filling fields
-2. **Invalid URL** - Enter `abc` as URL to test validation
-3. **Short token** - Enter token shorter than 10 characters  
-4. **Valid format** - Use `http://localhost:8086`, any org name, 10+ char token
-
-**Expected Results:**
-- All validation shows clear English error messages
-- Interface is fully responsive and professional looking
-- Connection attempts show appropriate error messages (normal without real InfluxDB)
+**For Local Testing:**
+- Use demo credentials to explore the interface
+- All features work without a real InfluxDB connection for UI testing
 
 ## Technology Stack
 
-- **Frontend**: React 19 with Vite
-- **UI Framework**: Material-UI (MUI) 
-- **Database Client**: @influxdata/influxdb-client
-- **Routing**: React Router DOM
-- **State Management**: React Context API
+- **Frontend**: React 19 + Vite + Material-UI
+- **Backend**: Node.js + Express + TypeScript  
+- **Database**: InfluxDB (time-series data)
+- **Deployment**: Netlify (frontend) + Railway (backend)
 
 ## Development Commands
 
@@ -63,18 +65,17 @@ npm run lint     # Run ESLint
 ## Project Structure
 
 ```
-src/
-├── components/
-│   ├── LoginForm.jsx       # Main authentication interface
-│   ├── Dashboard.jsx       # Post-login dashboard (basic)
-│   └── ProtectedRoute.jsx  # Route protection
-├── contexts/
-│   └── AuthContext.jsx     # Authentication state management
-├── hooks/
-│   └── useAuth.js          # Authentication hook
-└── App.jsx                 # Main application component
+├── src/                    # Frontend (React)
+│   ├── components/         # UI components
+│   ├── contexts/          # State management
+│   └── services/          # API communication
+├── backend/               # Backend API (Node.js + TypeScript)
+│   ├── src/controllers/   # API endpoints
+│   ├── src/services/      # Business logic
+│   └── src/routes/        # Route definitions
+└── public/               # Static assets
 ```
 
 ---
 
-**Note**: This is Phase 1 of the project. Additional features will be added in subsequent development phases.
+**Next Phase**: Data visualization with charts and graphs for time-series analysis.
