@@ -13,15 +13,12 @@ const PORT = process.env.PORT || 3001;
 app.use(helmet());
 
 // CORS配置 - 允许前端访问
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174', 
-  'https://influxdb-nocode-interface.netlify.app',
-  process.env.FRONTEND_URL
-].filter((origin): origin is string => Boolean(origin));
-
 app.use(cors({
-  origin: allowedOrigins,
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174', 
+    'https://influxdb-nocode-interface.netlify.app'
+  ],
   credentials: true
 }));
 
