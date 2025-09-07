@@ -9,10 +9,10 @@ import logger from './utils/logger';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// 安全中间件
+// Security middleware
 app.use(helmet());
 
-// CORS配置 - 允许前端访问
+// CORS configuration - allow frontend access
 app.use(cors({
   origin: [
     'http://localhost:5173',
@@ -22,32 +22,32 @@ app.use(cors({
   credentials: true
 }));
 
-// 日志中间件
+// Logging middleware
 app.use(morgan('combined', {
   stream: {
     write: (message: string) => logger.info(message.trim())
   }
 }));
 
-// 解析JSON请求体
+// Parse JSON request body
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// API路由
+// API routes
 app.use('/api', routes);
 
-// 错误处理中间件
+// Error handling middleware
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// 启动服务器
+// Start server
 app.listen(PORT, () => {
   logger.info(`🚀 InfluxDB No-Code API server is running on port ${PORT}`);
   logger.info(`📖 API Documentation: http://localhost:${PORT}/api/health`);
   logger.info(`🔗 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
 });
 
-// 优雅关闭处理
+// Graceful shutdown handling
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down gracefully');
   process.exit(0);

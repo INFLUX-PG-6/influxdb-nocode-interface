@@ -4,7 +4,7 @@ import { ApiResponse } from '../types';
 import logger from '../utils/logger';
 
 /**
- * 认证中间件 - 验证会话Token
+ * Authentication middleware - validate session token
  */
 export const authenticateSession = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -17,7 +17,7 @@ export const authenticateSession = (req: Request, res: Response, next: NextFunct
     return res.status(401).json(response);
   }
 
-  const sessionToken = authHeader.substring(7); // 移除 'Bearer ' 前缀
+  const sessionToken = authHeader.substring(7); // Remove 'Bearer ' prefix
   
   const session = sessionService.getSession(sessionToken);
   if (!session) {
@@ -28,7 +28,7 @@ export const authenticateSession = (req: Request, res: Response, next: NextFunct
     return res.status(401).json(response);
   }
 
-  // 将会话数据附加到请求对象
+  // Attach session data to request object
   req.session = session;
   
   logger.debug(`Authenticated session: ${session.id} for org: ${session.credentials.org}`);

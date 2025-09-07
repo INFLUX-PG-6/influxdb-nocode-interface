@@ -5,7 +5,7 @@ import { AuthResponse, ApiResponse, InfluxDBCredentials } from '../types';
 import logger from '../utils/logger';
 
 /**
- * 连接InfluxDB并创建会话
+ * Connect to InfluxDB and create session
  */
 export const connect = async (req: Request, res: Response) => {
   try {
