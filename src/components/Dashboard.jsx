@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -10,19 +10,34 @@ import {
   Grid,
   Card,
   CardContent,
-  Chip
+  Chip,
+  Tabs,
+  Tab
 } from '@mui/material';
 import {
   Logout,
   Storage,
   QueryBuilder,
   Timeline,
-  Settings
+  Settings,
+  Explore
 } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth';
+import DataSourceBrowser from './DataSourceBrowser';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState(0);
+  const [selectedDataSource, setSelectedDataSource] = useState(null);
+
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
+
+  const handleDataSourceSelection = (selection) => {
+    setSelectedDataSource(selection);
+    console.log('Selected data source:', selection);
+  };
 
   const features = [
     {
@@ -75,10 +90,10 @@ const Dashboard = () => {
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Paper sx={{ p: 3, mb: 3 }}>
           <Typography variant="h4" gutterBottom>
-            Welcome to InfluxDB No-Code Interface
+            InfluxDB No-Code Interface
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Successfully connected to your InfluxDB instance. You can now start building queries and visualizations without writing code.
+            Successfully connected to your InfluxDB instance. Explore your data and build queries visually.
           </Typography>
           <Box sx={{ mt: 2 }}>
             <Chip label={`Organization: ${user?.org}`} color="primary" sx={{ mr: 1 }} />
@@ -86,42 +101,90 @@ const Dashboard = () => {
           </Box>
         </Paper>
 
-        <Grid container spacing={3}>
-          {features.map((feature, index) => (
-            <Grid item xs={12} sm={6} md={6} key={index}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
-                  <Box sx={{ color: 'primary.main', mb: 2 }}>
-                    {feature.icon}
-                  </Box>
-                  <Typography gutterBottom variant="h6" component="h2">
-                    {feature.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    {feature.description}
-                  </Typography>
-                  <Chip 
-                    label={feature.status} 
-                    size="small" 
-                    color="warning" 
-                    variant="outlined"
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-
-        <Paper sx={{ p: 3, mt: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Connection Details
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            <strong>URL:</strong> {user?.url}<br />
-            <strong>Organization:</strong> {user?.org}<br />
-            <strong>Status:</strong> Connected and authenticated
-          </Typography>
+        {/* 标签页导航 */}
+        <Paper sx={{ mb: 3 }}>
+          <Tabs value={activeTab} onChange={handleTabChange} aria-label="dashboard tabs">
+            <Tab icon={<Explore />} label="Data Explorer" />
+            <Tab icon={<QueryBuilder />} label="Query Builder" />
+            <Tab icon={<Timeline />} label="Visualizations" />
+            <Tab icon={<Settings />} label="Settings" />
+          </Tabs>
         </Paper>
+
+        {/* 标签页内容 */}
+        {activeTab === 0 && (
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={4}>
+              <DataSourceBrowser onSelectionChange={handleDataSourceSelection} />
+            </Grid>
+            <Grid item xs={12} md={8}>
+              <Paper sx={{ p: 3, minHeight: 400 }}>
+                <Typography variant="h6" gutterBottom>
+                  Data Preview
+                </Typography>
+                {selectedDataSource ? (
+                  <Box>
+                    <Typography variant="body1" gutterBottom>
+                      Selected: {selectedDataSource.type} - {selectedDataSource.field}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Bucket: {selectedDataSource.bucket}<br/>
+                      Measurement: {selectedDataSource.measurement}
+                    </Typography>
+                    <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+                      <Typography variant="caption" display="block">
+                        Generated Flux Query:
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontFamily: 'monospace', mt: 1 }}>
+                        {`from(bucket: "${selectedDataSource.bucket}")
+  |> range(start: -1h)
+  |> filter(fn: (r) => r._measurement == "${selectedDataSource.measurement}")
+  |> filter(fn: (r) => r._field == "${selectedDataSource.field}")`}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ) : (
+                  <Typography color="text.secondary">
+                    Select a field or tag from the data source browser to preview the data structure and generate queries.
+                  </Typography>
+                )}
+              </Paper>
+            </Grid>
+          </Grid>
+        )}
+
+        {activeTab === 1 && (
+          <Paper sx={{ p: 3, minHeight: 400 }}>
+            <Typography variant="h6" gutterBottom>
+              Visual Query Builder
+            </Typography>
+            <Typography color="text.secondary">
+              Drag and drop interface for building Flux queries - Coming Soon!
+            </Typography>
+          </Paper>
+        )}
+
+        {activeTab === 2 && (
+          <Paper sx={{ p: 3, minHeight: 400 }}>
+            <Typography variant="h6" gutterBottom>
+              Data Visualizations  
+            </Typography>
+            <Typography color="text.secondary">
+              Charts and graphs for your data - Coming Soon!
+            </Typography>
+          </Paper>
+        )}
+
+        {activeTab === 3 && (
+          <Paper sx={{ p: 3, minHeight: 400 }}>
+            <Typography variant="h6" gutterBottom>
+              Settings
+            </Typography>
+            <Typography color="text.secondary">
+              Configuration options - Coming Soon!
+            </Typography>
+          </Paper>
+        )}
       </Container>
     </Box>
   );
