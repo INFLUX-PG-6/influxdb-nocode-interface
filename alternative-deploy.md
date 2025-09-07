@@ -1,43 +1,55 @@
-# 🔧 替代部署方案
+# 🔧 Alternative Deployment Methods
 
-## 如果GitHub OAuth出现问题，可以使用以下替代方案：
+## If GitHub OAuth Issues Occur
 
-### 方案1: 使用Railway CLI
+### Method 1: Railway CLI
 ```bash
-# 安装Railway CLI
+# Install Railway CLI
 npm install -g @railway/cli
 
-# 登录Railway
+# Login to Railway
 railway login
 
-# 在backend目录部署
+# Deploy backend
 cd backend
 railway init
 railway up
 ```
 
-### 方案2: 使用Docker部署到其他平台
+### Method 2: Direct Upload
+1. **Zip backend folder**
+2. **Upload to Railway**:
+   - Go to Railway dashboard
+   - "New Project" → "Empty Project"
+   - Upload zip file
+3. **Configure environment variables**
 
-#### Render.com部署
-1. 访问 https://render.com
-2. 连接GitHub仓库
-3. 选择backend目录
-4. 使用Dockerfile部署
+### Method 3: Alternative Git Hosting
+- Use GitLab, Bitbucket, or other Git providers
+- Connect to deployment platforms
+- Same configuration applies
 
-#### Heroku部署
+## Local Development
 ```bash
-# 安装Heroku CLI
-# 在backend目录
-heroku create your-app-name
-heroku container:push web
-heroku container:release web
+# Frontend
+npm run dev
+
+# Backend
+cd backend
+npm run dev
 ```
 
-### 方案3: 手动上传代码
-1. 下载代码为ZIP
-2. 在Railway/Vercel中选择"上传文件夹"
-3. 上传backend/frontend文件夹
+## Docker Deployment
+```bash
+# Build backend image
+cd backend
+docker build -t influxdb-nocode-backend .
 
-### 方案4: 使用不同的浏览器
-- 尝试Firefox、Safari、Edge等
-- 确保浏览器允许第三方cookies
+# Run container
+docker run -p 3001:3001 influxdb-nocode-backend
+```
+
+## Troubleshooting
+- **OAuth Issues**: Use CLI methods
+- **Build Failures**: Check logs in platform dashboard
+- **Network Issues**: Verify CORS and proxy settings

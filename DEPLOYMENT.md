@@ -1,80 +1,72 @@
-# 🚀 一键云部署指南
+# 🚀 Cloud Deployment Guide
 
-## 准备工作
-1. GitHub账号
-2. Vercel账号 (免费)
-3. Railway账号 (免费)
+## Prerequisites
+- GitHub account
+- Railway account (free)
+- Netlify account (free)
 
-## 步骤1: 后端部署到Railway
+## Step 1: Deploy Backend (Railway)
 
-### 1.1 创建Railway项目
-```bash
-1. 访问 https://railway.app
-2. 点击 "Start a New Project"
-3. 选择 "Deploy from GitHub repo"
-4. 选择你的仓库
-5. 选择 backend 目录
-```
+### Setup
+1. Visit https://railway.app
+2. "Start a New Project" → "Deploy from GitHub repo"
+3. Select your repository → Choose `backend` folder
 
-### 1.2 配置环境变量
+### Environment Variables
 ```
 NODE_ENV=production
 PORT=3001
-FRONTEND_URL=https://your-app.vercel.app
 LOG_LEVEL=info
 ```
 
-### 1.3 获取部署URL
-```
-部署完成后会得到类似：
-https://influxdb-nocode-backend-production.up.railway.app
-```
+### Get Deployment URL
+After deployment, you'll get: `https://your-app.up.railway.app`
 
-## 步骤2: 前端部署到Vercel
+## Step 2: Deploy Frontend (Netlify)
 
-### 2.1 创建Vercel项目
-```bash
-1. 访问 https://vercel.com
-2. 点击 "New Project"
-3. 导入GitHub仓库
-4. 选择根目录 (不是backend目录)
-```
+### Setup
+1. Visit https://netlify.com
+2. "New site from Git" → Connect to GitHub
+3. Select your repository
 
-### 2.2 配置环境变量
+### Build Settings
+- Build command: `npm run build`
+- Publish directory: `dist`
+
+### Environment Variables
 ```
-VITE_API_URL=https://your-backend.railway.app/api
+VITE_API_URL=https://YOUR_RAILWAY_URL/api
 ```
 
-### 2.3 更新vercel.json
-将Railway的实际URL替换到vercel.json中。
-
-## 步骤3: 测试部署
-
-### 3.1 访问前端
+### Redirects
+Create `public/_redirects`:
 ```
-https://your-app.vercel.app
+/api/*  https://YOUR_RAILWAY_URL/api/:splat  200
+/*      /index.html   200
 ```
 
-### 3.2 测试API
+## Step 3: Update CORS
+
+Add to Railway environment:
 ```
-https://your-app.vercel.app/api/health
+FRONTEND_URL=https://YOUR_NETLIFY_URL
 ```
 
-## 优势
-✅ 完全免费 (在免费额度内)
-✅ 自动HTTPS
-✅ 全球CDN
-✅ 自动部署
-✅ 无需服务器维护
-✅ 高可用性
+## Testing
 
-## 用户使用
-用户只需要：
-1. 访问你的Vercel URL
-2. 输入他们自己的InfluxDB连接信息
-3. 开始使用无代码界面
+1. Visit your Netlify URL
+2. Test InfluxDB connection with your credentials:
+   - URL: Your InfluxDB instance URL
+   - Organization: Your org name/ID
+   - Token: Your API token
+3. Browse data sources and run queries
 
-用户的InfluxDB可以在任何地方：
-- 本地部署
-- InfluxDB Cloud
-- 其他云服务商
+## Troubleshooting
+
+- **CORS Error**: Check FRONTEND_URL in Railway
+- **API 404**: Verify VITE_API_URL in Netlify
+- **Build Failed**: Check build logs for missing dependencies
+
+## Live Demo
+- Frontend: https://influxdb-nocode-interface.netlify.app
+- Backend: https://influxdb-nocode-interface-production.up.railway.app

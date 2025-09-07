@@ -1,28 +1,34 @@
-# 🔄 Fork项目到个人账户进行部署
+# 🔄 Fork & Deploy Instructions
 
-## 步骤1: Fork仓库
-1. 访问 https://github.com/INFLUX-PG-6/influxdb-nocode-interface
-2. 点击右上角的 "Fork" 按钮
-3. 选择您的个人GitHub账户
-4. 等待Fork完成
+## Step 1: Fork Repository
+1. Visit https://github.com/INFLUX-PG-6/influxdb-nocode-interface
+2. Click "Fork" button (top right)
+3. Select your personal GitHub account
+4. Wait for fork completion
 
-## 步骤2: 更新本地仓库
+## Step 2: Update Local Repository
 ```bash
-# 添加个人Fork作为新的远程仓库
+# Add personal fork as remote
 git remote add personal https://github.com/YOUR_USERNAME/influxdb-nocode-interface.git
 
-# 推送到个人仓库
+# Push to personal repository
 git push personal main
 ```
 
-## 步骤3: 在Vercel中部署
-1. 在Vercel中选择您个人账户下的Fork仓库
-2. 其他配置保持不变
-3. 正常部署
+## Step 3: Deploy from Fork
+1. Use your forked repository in deployment platforms
+2. Follow normal deployment steps from DEPLOYMENT.md
+3. All configurations remain the same
 
-## 步骤4: 同步更新 (可选)
-以后如果需要同步组织仓库的更新：
+## Step 4: Sync Updates (Optional)
+To sync future updates from the original repository:
 ```bash
 git pull origin main
 git push personal main
 ```
+
+## Benefits
+- Full control over your deployment
+- Can customize code for your needs
+- Independent of original repository changes
+- Easier integration with deployment platforms

@@ -1,9 +1,25 @@
-# 部署指南
+# Deployment Guide
 
-## 选项1: Vercel + Railway 部署
+## Option 1: Netlify + Railway (Recommended)
 
-### 前端部署 (Vercel)
-1. **构建配置**
+### Frontend (Netlify)
+```bash
+# Build settings
+Build command: npm run build
+Publish directory: dist
+```
+
+### Backend (Railway)
+```bash
+# Auto-detected from Dockerfile
+# Environment variables needed:
+NODE_ENV=production
+FRONTEND_URL=https://your-app.netlify.app
+```
+
+## Option 2: Vercel + Railway
+
+### Frontend (Vercel)
 ```json
 // vercel.json
 {
@@ -11,96 +27,38 @@
     {
       "source": "/api/(.*)",
       "destination": "https://your-backend.railway.app/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
 ```
 
-2. **环境变量**
-```bash
-VITE_API_URL=https://your-backend.railway.app/api
+## Environment Variables
+
+### Frontend
+```
+VITE_API_URL=/api
 ```
 
-### 后端部署 (Railway)
-1. **Dockerfile**
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-EXPOSE 3001
-CMD ["npm", "start"]
+### Backend
 ```
-
-2. **环境变量**
-```bash
 NODE_ENV=production
 PORT=3001
-FRONTEND_URL=https://your-frontend.vercel.app
+FRONTEND_URL=https://your-frontend-url
+LOG_LEVEL=info
 ```
 
-## 选项2: Docker 容器化部署
+## Testing Deployment
 
-### docker-compose.yml
-```yaml
-version: '3.8'
-services:
-  frontend:
-    build: .
-    ports:
-      - "80:80"
-    environment:
-      - VITE_API_URL=http://backend:3001/api
-    depends_on:
-      - backend
+1. **Health Check**: Visit `https://your-backend-url/api/health`
+2. **Frontend**: Visit your frontend URL
+3. **Integration**: Test InfluxDB connection through UI
 
-  backend:
-    build: ./backend
-    ports:
-      - "3001:3001"
-    environment:
-      - NODE_ENV=production
-      - PORT=3001
-      - FRONTEND_URL=http://localhost
-```
+## Common Issues
 
-## 选项3: 单服务器部署
+- **CORS Error**: Update FRONTEND_URL in backend
+- **API 404**: Check proxy/redirect configuration
+- **Build Failed**: Verify all dependencies in package.json
 
-### Nginx 配置
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-
-    # 前端静态文件
-    location / {
-        root /var/www/html;
-        try_files $uri $uri/ /index.html;
-    }
-
-    # API代理
-    location /api/ {
-        proxy_pass http://localhost:3001/api/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-```
-
-## 选项4: 静态部署 + Serverless
-
-### 前端: 静态托管 (Netlify/Vercel)
-### 后端: Serverless Functions (Vercel Functions/Netlify Functions)
-
-```javascript
-// api/auth/connect.js (Vercel Functions)
-export default async function handler(req, res) {
-  // 认证逻辑
-}
-```
+## Live Example
+- Frontend: https://influxdb-nocode-interface.netlify.app
+- Backend: https://influxdb-nocode-interface-production.up.railway.app
