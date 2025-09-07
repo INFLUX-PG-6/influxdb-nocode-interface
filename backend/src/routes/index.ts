@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRoutes from './auth';
 import dataSourceRoutes from './dataSource';
+import queryRoutes from './query';
 
 const router = Router();
 
@@ -18,5 +19,8 @@ router.use('/auth', authRoutes);
 
 // 数据源相关路由
 router.use('/datasource', dataSourceRoutes);
+
+// 查询相关路由
+router.use('/query', queryRoutes);
 
 export default router;
