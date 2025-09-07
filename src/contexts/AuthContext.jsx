@@ -13,11 +13,11 @@ export const AuthProvider = ({ children }) => {
       
       if (sessionToken) {
         try {
-          // 验证现有会话是否仍然有效
+          // Verify if existing session is still valid
           const statusResponse = await apiService.getAuthStatus();
           
           if (statusResponse.success) {
-            // 会话有效，恢复用户状态
+            // Session valid, restore user state
             const infoResponse = await apiService.getConnectionInfo();
             if (infoResponse.success) {
               setUser({
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
               });
             }
           } else {
-            // 会话无效，清除本地数据
+            // Session invalid, clear local data
             apiService.clearSession();
           }
         } catch (error) {
@@ -46,11 +46,11 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       
-      // 使用API服务连接InfluxDB
+      // Use API service to connect to InfluxDB
       const response = await apiService.connect({ url, token, org });
       
       if (response.success) {
-        // 连接成功，设置用户状态
+        // Connection successful, set user state
         setUser({
           org: response.data.user.org,
           url: response.data.user.url,
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
         
         return { success: true };
       } else {
-        // 连接失败
+        // Connection failed
         return { 
           success: false, 
           error: response.error || 'Authentication failed'
@@ -79,12 +79,12 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      // 调用API登出
+      // Call API logout
       await apiService.logout();
     } catch (error) {
       console.error('Logout API call failed:', error);
     } finally {
-      // 无论API调用是否成功，都清除本地状态
+      // Clear local state regardless of API call success
       setUser(null);
     }
   };
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     isAuthenticated: !!user,
-    // 提供API服务实例供其他组件使用
+    // Provide API service instance for other components
     apiService
   };
 

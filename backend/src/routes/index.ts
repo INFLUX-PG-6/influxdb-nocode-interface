@@ -5,7 +5,7 @@ import queryRoutes from './query';
 
 const router = Router();
 
-// 健康检查端点
+// Health check endpoint
 router.get('/health', (req, res) => {
   res.json({
     success: true,
@@ -14,13 +14,13 @@ router.get('/health', (req, res) => {
   });
 });
 
-// 认证相关路由
+// Authentication routes
 router.use('/auth', authRoutes);
 
-// 数据源相关路由
+// Data source routes
 router.use('/datasource', dataSourceRoutes);
 
-// 查询相关路由
+// Query routes
 router.use('/query', queryRoutes);
 
 export default router;

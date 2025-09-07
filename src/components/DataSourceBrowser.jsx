@@ -37,7 +37,7 @@ const DataSourceBrowser = ({ onSelectionChange }) => {
   const [tags, setTags] = useState({});
   const [selectedItem, setSelectedItem] = useState(null);
 
-  // 加载buckets
+  // Load buckets
   useEffect(() => {
     const loadBuckets = async () => {
       try {
@@ -59,7 +59,7 @@ const DataSourceBrowser = ({ onSelectionChange }) => {
     loadBuckets();
   }, [apiService]);
 
-  // 展开/收起bucket
+  // Toggle bucket expand/collapse
   const handleBucketToggle = async (bucketName) => {
     const isExpanded = expandedBuckets[bucketName];
     
@@ -68,7 +68,7 @@ const DataSourceBrowser = ({ onSelectionChange }) => {
       [bucketName]: !isExpanded
     }));
 
-    // 如果是展开且还没有加载measurements
+    // If expanding and measurements not loaded yet
     if (!isExpanded && !measurements[bucketName]) {
       try {
         const response = await apiService.request(`/datasource/buckets/${bucketName}/measurements`);
@@ -85,7 +85,7 @@ const DataSourceBrowser = ({ onSelectionChange }) => {
     }
   };
 
-  // 展开/收起measurement
+  // Toggle measurement expand/collapse
   const handleMeasurementToggle = async (bucketName, measurementName) => {
     const key = `${bucketName}/${measurementName}`;
     const isExpanded = expandedMeasurements[key];
@@ -95,7 +95,7 @@ const DataSourceBrowser = ({ onSelectionChange }) => {
       [key]: !isExpanded
     }));
 
-    // 如果是展开且还没有加载字段和标签
+    // If expanding and fields/tags not loaded yet
     if (!isExpanded && !fields[key]) {
       try {
         const [fieldsResponse, tagsResponse] = await Promise.all([
@@ -122,7 +122,7 @@ const DataSourceBrowser = ({ onSelectionChange }) => {
     }
   };
 
-  // 选择项目
+  // Select item
   const handleItemSelect = (type, bucketName, measurementName, fieldName) => {
     const selection = {
       type,

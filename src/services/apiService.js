@@ -1,5 +1,5 @@
-// API服务层 - 处理与后端API的通信
-// 在开发环境使用Vite代理，生产环境使用Netlify重定向到Railway
+// API Service Layer - Handles communication with backend API
+// Uses Vite proxy in development, Netlify redirects to Railway in production
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 class ApiService {
@@ -9,7 +9,7 @@ class ApiService {
   }
 
   /**
-   * 通用请求方法
+   * Generic request method
    */
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
@@ -20,7 +20,7 @@ class ApiService {
       },
     };
 
-    // 如果有会话Token，添加到请求头
+    // Add session token to headers if available
     if (this.sessionToken) {
       defaultOptions.headers.Authorization = `Bearer ${this.sessionToken}`;
     }
@@ -38,7 +38,7 @@ class ApiService {
       const response = await fetch(url, finalOptions);
       const data = await response.json();
       
-      // 如果是401错误，清除本地会话Token
+      // Clear local session token on 401 error
       if (response.status === 401) {
         this.clearSession();
       }
@@ -60,7 +60,7 @@ class ApiService {
   }
 
   /**
-   * 设置会话Token
+   * Set session token
    */
   setSessionToken(token) {
     this.sessionToken = token;
@@ -72,7 +72,7 @@ class ApiService {
   }
 
   /**
-   * 清除会话
+   * Clear session
    */
   clearSession() {
     this.sessionToken = null;
@@ -80,16 +80,16 @@ class ApiService {
   }
 
   /**
-   * 获取当前会话Token
+   * Get current session token
    */
   getSessionToken() {
     return this.sessionToken;
   }
 
-  // ========== 认证相关API ==========
+  // ========== Authentication APIs ==========
 
   /**
-   * 连接InfluxDB
+   * Connect to InfluxDB
    */
   async connect(credentials) {
     const response = await this.request('/auth/connect', {
@@ -105,14 +105,14 @@ class ApiService {
   }
 
   /**
-   * 检查会话状态
+   * Check session status
    */
   async getAuthStatus() {
     return await this.request('/auth/status');
   }
 
   /**
-   * 刷新会话
+   * Refresh session
    */
   async refreshSession() {
     return await this.request('/auth/refresh', {
@@ -121,37 +121,37 @@ class ApiService {
   }
 
   /**
-   * 登出
+   * Logout
    */
   async logout() {
     const response = await this.request('/auth/logout', {
       method: 'POST'
     });
     
-    // 无论API调用是否成功，都清除本地会话
+    // Clear local session regardless of API call success
     this.clearSession();
     
     return response;
   }
 
   /**
-   * 获取连接信息
+   * Get connection info
    */
   async getConnectionInfo() {
     return await this.request('/auth/info');
   }
 
   /**
-   * 健康检查
+   * Health check
    */
   async healthCheck() {
     return await this.request('/health');
   }
 
-  // ========== 查询相关API ==========
+  // ========== Query APIs ==========
 
   /**
-   * 执行Flux查询
+   * Execute Flux query
    */
   async executeQuery(query, limit = 100) {
     return await this.request('/query/execute', {
@@ -161,7 +161,7 @@ class ApiService {
   }
 
   /**
-   * 验证查询语法
+   * Validate query syntax
    */
   async validateQuery(query) {
     return await this.request('/query/validate', {
@@ -171,13 +171,13 @@ class ApiService {
   }
 
   /**
-   * 获取查询模板
+   * Get query templates
    */
   async getQueryTemplates() {
     return await this.request('/query/templates');
   }
 }
 
-// 创建单例实例
+// Create singleton instance
 export const apiService = new ApiService();
 export default apiService;

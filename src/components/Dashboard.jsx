@@ -46,7 +46,7 @@ const Dashboard = () => {
   const handleDataSourceSelection = (selection) => {
     setSelectedDataSource(selection);
     
-    // 自动生成查询
+    // Auto-generate query
     if (selection) {
       const generatedQuery = `from(bucket: "${selection.bucket}")
   |> range(start: -1h)
@@ -143,7 +143,7 @@ const Dashboard = () => {
           </Box>
         </Paper>
 
-        {/* 标签页导航 */}
+        {/* Tab Navigation */}
         <Paper sx={{ mb: 3 }}>
           <Tabs value={activeTab} onChange={handleTabChange} aria-label="dashboard tabs">
             <Tab icon={<Explore />} label="Data Explorer" />
@@ -153,7 +153,7 @@ const Dashboard = () => {
           </Tabs>
         </Paper>
 
-        {/* 标签页内容 */}
+        {/* Tab Content */}
         {activeTab === 0 && (
           <Grid container spacing={3}>
             <Grid item xs={12} md={4}>
@@ -161,7 +161,7 @@ const Dashboard = () => {
             </Grid>
             <Grid item xs={12} md={8}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {/* 查询编辑器 */}
+                {/* Query Editor */}
                 <Paper sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                     <Typography variant="h6">
@@ -213,7 +213,7 @@ const Dashboard = () => {
                   )}
                 </Paper>
 
-                {/* 查询结果 */}
+                {/* Query Results */}
                 <QueryResult 
                   data={queryResult}
                   loading={queryLoading}

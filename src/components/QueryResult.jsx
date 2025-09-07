@@ -53,7 +53,7 @@ const QueryResult = ({ data, loading, error, query }) => {
 
   return (
     <Paper sx={{ p: 2 }}>
-      {/* 结果统计 */}
+      {/* Results Summary */}
       <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
         <Chip 
           icon={<TableChart />}
@@ -75,7 +75,7 @@ const QueryResult = ({ data, loading, error, query }) => {
         />
       </Box>
 
-      {/* 查询语句显示 */}
+      {/* Query Display */}
       {query && (
         <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
           <Typography variant="caption" display="block" gutterBottom>
@@ -87,7 +87,7 @@ const QueryResult = ({ data, loading, error, query }) => {
         </Box>
       )}
 
-      {/* 数据表格 */}
+      {/* Data Table */}
       {rows.length > 0 ? (
         <TableContainer sx={{ maxHeight: 400 }}>
           <Table stickyHeader size="small">
@@ -121,7 +121,7 @@ const QueryResult = ({ data, loading, error, query }) => {
         </Box>
       )}
 
-      {/* 如果结果被截断 */}
+      {/* If results truncated */}
       {totalRows >= 100 && (
         <Alert severity="info" sx={{ mt: 2 }}>
           Results limited to 100 rows. Use more specific filters to see different data.
