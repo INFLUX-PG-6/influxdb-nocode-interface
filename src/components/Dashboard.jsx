@@ -12,7 +12,9 @@ import {
   CardContent,
   Chip,
   Tabs,
-  Tab
+  Tab,
+  TextField,
+  Alert
 } from '@mui/material';
 import {
   Logout,
@@ -20,15 +22,22 @@ import {
   QueryBuilder,
   Timeline,
   Settings,
-  Explore
+  Explore,
+  PlayArrow,
+  Code
 } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth';
 import DataSourceBrowser from './DataSourceBrowser';
+import QueryResult from './QueryResult';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, apiService } = useAuth();
   const [activeTab, setActiveTab] = useState(0);
   const [selectedDataSource, setSelectedDataSource] = useState(null);
+  const [currentQuery, setCurrentQuery] = useState('');
+  const [queryResult, setQueryResult] = useState(null);
+  const [queryLoading, setQueryLoading] = useState(false);
+  const [queryError, setQueryError] = useState('');
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -36,7 +45,40 @@ const Dashboard = () => {
 
   const handleDataSourceSelection = (selection) => {
     setSelectedDataSource(selection);
-    console.log('Selected data source:', selection);
+    
+    // 自动生成查询
+    if (selection) {
+      const generatedQuery = `from(bucket: "${selection.bucket}")
+  |> range(start: -1h)
+  |> filter(fn: (r) => r._measurement == "${selection.measurement}")
+  |> filter(fn: (r) => r._field == "${selection.field}")`;
+      
+      setCurrentQuery(generatedQuery);
+    }
+  };
+
+  const handleRunQuery = async () => {
+    if (!currentQuery.trim()) {
+      setQueryError('Please enter a query');
+      return;
+    }
+
+    try {
+      setQueryLoading(true);
+      setQueryError('');
+      
+      const response = await apiService.executeQuery(currentQuery);
+      
+      if (response.success) {
+        setQueryResult(response.data);
+      } else {
+        setQueryError(response.error || 'Query execution failed');
+      }
+    } catch (error) {
+      setQueryError('Network error while executing query');
+    } finally {
+      setQueryLoading(false);
+    }
   };
 
   const features = [
@@ -118,37 +160,67 @@ const Dashboard = () => {
               <DataSourceBrowser onSelectionChange={handleDataSourceSelection} />
             </Grid>
             <Grid item xs={12} md={8}>
-              <Paper sx={{ p: 3, minHeight: 400 }}>
-                <Typography variant="h6" gutterBottom>
-                  Data Preview
-                </Typography>
-                {selectedDataSource ? (
-                  <Box>
-                    <Typography variant="body1" gutterBottom>
-                      Selected: {selectedDataSource.type} - {selectedDataSource.field}
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {/* 查询编辑器 */}
+                <Paper sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                    <Typography variant="h6">
+                      Flux Query Editor
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Bucket: {selectedDataSource.bucket}<br/>
-                      Measurement: {selectedDataSource.measurement}
-                    </Typography>
-                    <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
-                      <Typography variant="caption" display="block">
-                        Generated Flux Query:
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontFamily: 'monospace', mt: 1 }}>
-                        {`from(bucket: "${selectedDataSource.bucket}")
-  |> range(start: -1h)
-  |> filter(fn: (r) => r._measurement == "${selectedDataSource.measurement}")
-  |> filter(fn: (r) => r._field == "${selectedDataSource.field}")`}
-                      </Typography>
-                    </Box>
+                    <Button
+                      variant="contained"
+                      startIcon={<PlayArrow />}
+                      onClick={handleRunQuery}
+                      disabled={!currentQuery.trim() || queryLoading}
+                    >
+                      {queryLoading ? 'Running...' : 'Run Query'}
+                    </Button>
                   </Box>
-                ) : (
-                  <Typography color="text.secondary">
-                    Select a field or tag from the data source browser to preview the data structure and generate queries.
-                  </Typography>
-                )}
-              </Paper>
+                  
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={6}
+                    variant="outlined"
+                    value={currentQuery}
+                    onChange={(e) => setCurrentQuery(e.target.value)}
+                    placeholder="Enter your Flux query here or select a field from the data source browser..."
+                    sx={{ 
+                      fontFamily: 'monospace',
+                      '& .MuiInputBase-input': {
+                        fontFamily: 'monospace',
+                        fontSize: '0.875rem'
+                      }
+                    }}
+                  />
+                  
+                  {selectedDataSource && (
+                    <Box sx={{ mt: 2 }}>
+                      <Chip 
+                        icon={<Code />}
+                        label={`${selectedDataSource.bucket}/${selectedDataSource.measurement}/${selectedDataSource.field}`}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                      />
+                    </Box>
+                  )}
+                  
+                  {queryError && (
+                    <Alert severity="error" sx={{ mt: 2 }}>
+                      {queryError}
+                    </Alert>
+                  )}
+                </Paper>
+
+                {/* 查询结果 */}
+                <QueryResult 
+                  data={queryResult}
+                  loading={queryLoading}
+                  error={queryError}
+                  query={currentQuery}
+                />
+              </Box>
             </Grid>
           </Grid>
         )}

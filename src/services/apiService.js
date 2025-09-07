@@ -147,6 +147,35 @@ class ApiService {
   async healthCheck() {
     return await this.request('/health');
   }
+
+  // ========== 查询相关API ==========
+
+  /**
+   * 执行Flux查询
+   */
+  async executeQuery(query, limit = 100) {
+    return await this.request('/query/execute', {
+      method: 'POST',
+      body: JSON.stringify({ query, limit })
+    });
+  }
+
+  /**
+   * 验证查询语法
+   */
+  async validateQuery(query) {
+    return await this.request('/query/validate', {
+      method: 'POST',
+      body: JSON.stringify({ query })
+    });
+  }
+
+  /**
+   * 获取查询模板
+   */
+  async getQueryTemplates() {
+    return await this.request('/query/templates');
+  }
 }
 
 // 创建单例实例
